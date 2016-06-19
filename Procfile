@@ -1,2 +1,2 @@
 web: python manage.py migrate
-web: gunicorn glints.wsgi --log-file -
+web: gunicorn dota2.wsgi --log-file -

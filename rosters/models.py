@@ -3,6 +3,11 @@ from django.db import models
 # Create your models here.
 
 
+class Team(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=1024)
+
+
 class Player(models.Model):
     STATUS = (
         ('Primary', 'Primary'),
@@ -18,8 +23,3 @@ class Player(models.Model):
         max_length=1024,
     )
     updated = models.DateTimeField(blank=False, null=False)
-
-
-class Team(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=1024)

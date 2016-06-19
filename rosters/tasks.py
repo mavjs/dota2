@@ -25,9 +25,9 @@ def get_rosters():
         if tz == 'PDT':
             timezone = pytz.timezone('US/Pacific')
         dt = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=int(hour), minute=int(minute),
-                           second=int(sec), tzinfo=timezone)
-        name = div[3].contents[0].string
-        full_name = div[3].contents[1].strip(' (').strip(')')
+                               second=int(sec), tzinfo=timezone)
+        name = div[3].contents[0].string.encode()
+        full_name = div[3].contents[1].strip(' (').strip(')').encode()
         team_name, team_id = div[4].string.split(' (')
         team_id = team_id.split(')')[0].split('ID: ')[1]
         status = div[5].string
@@ -37,7 +37,7 @@ def get_rosters():
         player, created = Player.objects.get_or_create(name=name, full_name=full_name, team=team, status=status, updated=dt)
         player.save()
 
-        print('Updated: {} at {}'.format(name, dt))
+        print('Updated: {} ({}) at {}'.format(name, full_name, dt))
 
 
 def scrape():

@@ -19,13 +19,7 @@ class Player(models.Model):
     )
     updated = models.DateTimeField(blank=False, null=False)
 
-    class Meta:
-        order_with_respect_to = 'team'
-
 
 class Team(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1024)
-
-    class Meta:
-        ordering = ('id', )

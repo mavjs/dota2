@@ -11,7 +11,7 @@ class Player(models.Model):
     )
     name = models.CharField(max_length=1024)
     full_name = models.CharField(max_length=1024)
-    team = models.ManyToManyField('Team')
+    team = models.ForeignKey(Team, blank=False, null=False)
     status = models.CharField(
         choices=STATUS,
         default='Primary',

@@ -33,9 +33,9 @@ def get_rosters():
         status = div[5].string
 
         team, created = Team.objects.get_or_create(id=team_id, name=team_name)
-        player, created = Player.objects.get_or_create(name=name, full_name=full_name, status=status, updated=dt)
+        team.save()
+        player, created = Player.objects.get_or_create(name=name, full_name=full_name, team=team, status=status, updated=dt)
         player.save()
-        player.team.add(team)
 
         print('Updated: {} at {}'.format(name, dt))
 

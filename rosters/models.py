@@ -16,10 +16,10 @@ class Player(models.Model):
     )
     name = models.CharField(max_length=1024)
     full_name = models.CharField(max_length=1024)
-    team = models.ForeignKey(Team, blank=False, null=False)
+    team = models.ForeignKey(Team, blank=True, null=True)
     status = models.CharField(
         choices=STATUS,
         default='Primary',
         max_length=1024,
     )
-    updated = models.DateTimeField(blank=False, null=False)
+    updated = models.DateTimeField(blank=True, null=True)

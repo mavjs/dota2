@@ -12,7 +12,7 @@ HEADERS = {
 URL = "http://www.dota2.com/majorsregistration/list"
 
 
-def get_rosters(URL, HEADERS):
+def get_rosters():
     response = requests.get(URL, headers=HEADERS)
 
     soup = bs4.BeautifulSoup(response.text, 'html.parser')
@@ -28,13 +28,12 @@ def get_rosters(URL, HEADERS):
                            second=int(sec), tzinfo=timezone)
         name = div[3].contents[0].string
         full_name = div[3].contents[1].strip(' (').strip(')')
-        print(type(full_name))
         team_name, team_id = div[4].string.split(' (')
         team_id = team_id.split(')')[0].split('ID: ')[1]
         status = div[5].string
 
-        team, team_created = Team.objects.get_or_create(id=team_id, name=team_name)
-        player, player_created = Player.objects.get_or_create(name=name, full_name=full_name, status=status, updated=dt)
+        team, created = Team.objects.get_or_create(id=team_id, name=team_name)
+        player, created = Player.objects.get_or_create(name=name, full_name=full_name, status=status, updated=dt)
         player.save()
         player.team.add(team)
 
@@ -42,4 +41,4 @@ def get_rosters(URL, HEADERS):
 
 
 def scrape():
-    get_rosters(URL=URL, HEADERS=HEADERS)
+    get_rosters()

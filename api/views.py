@@ -1,14 +1,6 @@
-from rest_framework import serializers, viewsets
-from rosters.models import Player, Team
-
-class TeamSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Team
-
-
-class PlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player
+from rest_framework import viewsets
+from .serializers import TeamSerializer, PlayerSerializer
+from rosters.models import Team, Player
 
 
 class TeamViewSet(viewsets.ModelViewSet):

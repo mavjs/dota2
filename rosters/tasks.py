@@ -14,7 +14,7 @@ URL = "http://www.dota2.com/majorsregistration/list"
 
 def get_rosters():
     response = requests.get(URL, headers=HEADERS)
-
+    response.encoding = 'utf-8'
     soup = bs4.BeautifulSoup(response.text, 'html.parser')
 
     for divs in soup.find_all('div', {'class': 'ConfirmationRow'}):

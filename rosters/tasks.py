@@ -26,8 +26,8 @@ def get_rosters():
             timezone = pytz.timezone('US/Pacific')
         dt = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=int(hour), minute=int(minute),
                                second=int(sec), tzinfo=timezone)
-        name = div[3].contents[0].string.encode()
-        full_name = div[3].contents[1].strip(' (').strip(')').encode()
+        name = div[3].contents[0].string
+        full_name = div[3].contents[1].strip(' (').strip(')')
         team_name, team_id = div[4].string.split(' (')
         team_id = team_id.split(')')[0].split('ID: ')[1]
         status = div[5].string

@@ -45,6 +45,7 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'rosters',
+    'api'
 ]
 
 THIRDPARTY_APPS = [

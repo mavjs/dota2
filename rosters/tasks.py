@@ -7,13 +7,13 @@ import datetime
 from .models import Player, Team
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36'}
-
-URL = "http://www.dota2.com/majorsregistration/list"
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36'
+}
 
 
 def get_rosters():
-    response = requests.get(URL, headers=HEADERS)
+    pro_roster_url = "http://www.dota2.com/majorsregistration/list"
+    response = requests.get(pro_roster_url, headers=HEADERS)
     response.encoding = 'utf-8'
     soup = bs4.BeautifulSoup(response.text, 'html.parser')
 
@@ -34,11 +34,61 @@ def get_rosters():
 
         team, created = Team.objects.get_or_create(id=team_id, name=team_name)
         team.save()
-        player, created = Player.objects.get_or_create(name=name, full_name=full_name, team=team, status=status, updated=dt)
+        player, created = Player.objects.get_or_create(name=name, full_name=full_name, team=team, status=status,
+                                                       updated=dt)
         player.save()
 
         print('Updated: {} ({}) at {}'.format(name, full_name, dt))
 
 
-def scrape():
-    get_rosters()
+def get_leaderboard():
+    leaderboard_url = 'http://www.dota2.com/webapi/ILeaderboard/GetDivisionLeaderboard/v0001'
+    divisions = ['americas', 'europe', 'se_asia', 'china']
+
+    for division in divisions:
+        response = requests.get(leaderboard_url, params={'division': division}, headers=HEADERS)
+        division_leaderboard = response.json()
+        leaderboard = division_leaderboard["leaderboard"]
+
+        print("Querying rankings in division: {}".format(division))
+
+        for rank in leaderboard:
+            if "team_id" in rank:
+                if "country" in rank:
+                    team, created = Team.objects.update_or_create(id=rank["team_id"],
+                                                                  defaults={"tag": rank["team_tag"]})
+                    team.save()
+                    player, created = Player.objects.update_or_create(name=rank["name"], team=team,
+                                                                      defaults={"country": rank["country"],
+                                                                                "rank": rank["rank"],
+                                                                                "mmr": rank["solo_mmr"]})
+                    player.save()
+
+                    print(
+                        "Updated: {} ({}) (mmr: {}, rank: {})".format(rank["name"], rank["team_tag"], rank["solo_mmr"],
+                                                                      rank["rank"]))
+                else:
+                    team, created = Team.objects.update_or_create(id=rank["team_id"],
+                                                                  defaults={"tag": rank["team_tag"]})
+                    team.save()
+                    player, created = Player.objects.update_or_create(name=rank["name"], team=team,
+                                                                      defaults={"rank": rank["rank"],
+                                                                                "mmr": rank["solo_mmr"]})
+                    player.save()
+
+                    print(
+                        "Updated: {} ({}) (mmr: {}, rank: {})".format(rank["name"], rank["team_tag"], rank["solo_mmr"],
+                                                                      rank["rank"]))
+            else:
+                if "country" in rank:
+                    player, created = Player.objects.get_or_create(name=rank["name"], country=rank["country"],
+                                                                   rank=rank["rank"], mmr=rank["solo_mmr"])
+                    player.save()
+
+                    print("Updated: {} (mmr: {}, rank: {})".format(rank["name"], rank["solo_mmr"], rank["rank"]))
+                else:
+                    player, created = Player.objects.get_or_create(name=rank["name"],
+                                                                   rank=rank["rank"], mmr=rank["solo_mmr"])
+                    player.save()
+
+                    print("Updated: {} (mmr: {}, rank: {})".format(rank["name"], rank["solo_mmr"], rank["rank"]))

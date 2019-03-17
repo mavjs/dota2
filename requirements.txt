@@ -1,7 +1,7 @@
 ## The following requirements were added by pip freeze:
 beautifulsoup4==4.4.1
 dj-database-url==0.4.1
-Django==1.9.7
+Django>=1.11.19
 django-debug-toolbar==1.4
 django-extensions==1.6.7
 djangorestframework==3.3.3

@@ -4,7 +4,7 @@ dj-database-url==0.4.1
 Django>=1.11.19
 django-debug-toolbar==1.4
 django-extensions==1.6.7
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 gunicorn==19.6.0
 psycopg2==2.6.1
 pytz==2016.4
